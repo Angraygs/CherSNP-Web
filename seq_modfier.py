@@ -110,7 +110,15 @@ def xna_modfier(seq = 'AGCCCT', mark = 'c.2G>A'):
 		else:
 			return -2
 	
-# def translater 
+def D2RNA(seq = 'AGCTT'):
+	return seq.replace('T', 'U')
+
+def R2DNA(seq = 'AGCUU'):
+	return seq.replace('U', 'T')
+
+def translater(seq = '', spice = '') 
 
 print(aa_modfier())
 print(xna_modfier())
+print(D2RNA())
+print(R2DNA())
