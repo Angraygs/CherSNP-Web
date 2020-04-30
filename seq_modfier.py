@@ -1,6 +1,22 @@
 import json
 import re
 
+# All three dicts below could be put into a seperate JSON for reuse
+# But I think it may not be necessary for this project since would need to read them in anyway
+
+Ambig_nuc = {
+	'R':['A','G'],
+	'Y':['C','T'],
+	'S':['C','G'],
+	'W':['A','T'],
+	'K':['G','T'],
+	'M':['A','C'],
+	'B':['C','G','T'],
+	'V':['A','G','C'],
+	'D':['A','G','T'],
+	'H':['A','C','T']
+}
+
 DNA_AA = {
 	'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
 	'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
@@ -66,6 +82,19 @@ AA_simp = {
 	'Val':'V',
 }
 
+# Extract information from AA mark
+# Original AA, position, Changed AA
+def aa_mark_decode(mark):
+	info = mark.split('p.')[1]
+	ori = info[:3]
+	tar = info[-3:]
+	info = info.split(ori)[1]
+	pos = int(info.split(tar)[0])-1
+	ori = AA_simp[ori]
+	tar = AA_simp[tar]
+	return pos, ori, tar
+	
+# Modify AA seq based on mark
 def aa_modfier(seq = 'MMAAA', mark = 'p.Met2Ala'):
 	# If mark is not for protein...
 	if re.search(r'p.', mark) is None:
@@ -73,14 +102,8 @@ def aa_modfier(seq = 'MMAAA', mark = 'p.Met2Ala'):
 	#Else we can go further
 	else:
 		#First, get all info from the mark
-		info = mark.split('p.')[1]
-		ori = info[:3]
-		tar = info[-3:]
-		info = info.split(ori)[1]
-		pos = int(info.split(tar)[0])-1
-		ori = AA_simp[ori]
-		tar = AA_simp[tar]
-	
+		pos, ori, tar = aa_mark_decode(mark)
+
 		#Then check ref seq
 		#If reference doesn't match, something is wrong
 		if seq[pos] != ori:
@@ -90,6 +113,7 @@ def aa_modfier(seq = 'MMAAA', mark = 'p.Met2Ala'):
 			ans = seq[:pos] + tar + seq[pos+1:]
 			return ans
 
+# Modify DNA/RNA seq based on mark
 def xna_modfier(seq = 'AGCCCT', mark = 'c.2G>A'):
 	# Not supporting genomic mark
 	if re.search(r'g.', mark) is not None:
@@ -109,16 +133,88 @@ def xna_modfier(seq = 'AGCCCT', mark = 'c.2G>A'):
 			return ans
 		else:
 			return -2
-	
+
+
+# Convert DNA to RNA
 def D2RNA(seq = 'AGCTT'):
 	return seq.replace('T', 'U')
 
+# Convert RNA to DNA
 def R2DNA(seq = 'AGCUU'):
 	return seq.replace('U', 'T')
 
-def translater(seq = '', spice = '') 
 
-print(aa_modfier())
-print(xna_modfier())
-print(D2RNA())
-print(R2DNA())
+def translater(seq = 'ATGACGGCGTGA', CDSs=None, AAmark = None):
+	# Just covert it to DNA first
+	seq = R2DNA(seq)
+
+	# Preset some variables 
+	ans = []
+	DNA_ans = ''
+	remain = ''
+
+	# Get AA mark information if necessary 
+	if AAmark is not None:
+		if re.search(r'p.', AAmark) is None:
+			return -1
+		else:
+			pos, ori, tar = aa_mark_decode(AAmark)
+
+	# if no CDSs specified, will assume how seq is one
+	if CDSs is None: CDSs = [[1,len(seq)]]
+
+	# Iterate through every CDS
+	for p in range(len(CDSs)):
+		part = CDSs[p]
+		start = part[0]-1
+		end = part[1]
+
+		i = start
+		while i < end:
+			if i+3 <= end:
+				if len(remain) > 0:
+					read = remain + seq[i:i+3-len(remain)]
+					i -= len(remain)
+				else:
+					read = seq[i:i+3]
+
+				if DNA_AA[read] != '_':
+					ans.append(DNA_AA[read])
+
+					if len(ans) == pos+1:
+						if DNA_AA[read] == ori:
+							ans[-1] = tar
+
+							# Get var's DNA seq
+							cod = AA_DNA[tar]
+							tempans = cod[0]
+							opt = 0
+							for c in cod:
+								count = 0
+								for a in range(3):
+									if c[a] == read[a]: count += 1
+								if count > opt:
+									tempans = c
+									opt = count
+							if len(remain) == 0:
+								DNA_ans = seq[:i] + tempans + seq[i+3:]
+							else:
+								print('More works on variant influce 2 CDSs')
+								remain = ''
+						else:
+							print('Error: Hit variant pos but something wrong')
+					i+=3
+				else:  
+					if(i+3 == CDSs[-1][1]):
+						return ans, DNA_ans
+					else:
+						print('Error: Hit stop codon before use all seqs')
+
+			# If some nucleotides are still left pass them to next cds
+			else:
+				remain = seq[i:end]
+				break
+
+
+
+print(translater(AAmark = 'p.Thr2Ala'))
