@@ -82,6 +82,9 @@ AA_simp = {
 	'Val':'V',
 }
 
+testseq = 'ATGACGACGACGACGACGACGACGACGACGACGACGACGACGGGGGGGGGGTTTTAG'
+testcdss = [[1,41],[51,57]]
+
 # Extract information from AA mark
 # Original AA, position, Changed AA
 def aa_mark_decode(mark):
@@ -136,15 +139,15 @@ def xna_modfier(seq = 'AGCCCT', mark = 'c.2G>A'):
 
 
 # Convert DNA to RNA
-def D2RNA(seq = 'AGCTT'):
+def D2RNA(seq):
 	return seq.replace('T', 'U')
 
 # Convert RNA to DNA
-def R2DNA(seq = 'AGCUU'):
+def R2DNA(seq):
 	return seq.replace('U', 'T')
 
-
-def translater(seq = 'ATGACGGCGTGA', CDSs=None, AAmark = None):
+# This would generate AA sequence based on information
+def translater(seq, CDSs=None, AAmark = None):
 	# Just covert it to DNA first
 	seq = R2DNA(seq)
 
@@ -170,18 +173,24 @@ def translater(seq = 'ATGACGGCGTGA', CDSs=None, AAmark = None):
 		end = part[1]
 
 		i = start
+
+		# While staying in the CDS
 		while i < end:
 			if i+3 <= end:
 				if len(remain) > 0:
 					read = remain + seq[i:i+3-len(remain)]
 					i -= len(remain)
+					used_rem = len(remain)
+					remain = ''
 				else:
 					read = seq[i:i+3]
 
+
+				# We hit on a coding codon
 				if DNA_AA[read] != '_':
 					ans.append(DNA_AA[read])
 
-					if len(ans) == pos+1:
+					if AAmark is not None and len(ans) == pos+1:
 						if DNA_AA[read] == ori:
 							ans[-1] = tar
 
@@ -196,15 +205,20 @@ def translater(seq = 'ATGACGGCGTGA', CDSs=None, AAmark = None):
 								if count > opt:
 									tempans = c
 									opt = count
-							if len(remain) == 0:
+							# Easy pissy if not involving 2 CDSs
+							if not used_rem:
 								DNA_ans = seq[:i] + tempans + seq[i+3:]
+							# But things can go complicated
 							else:
-								print('More works on variant influce 2 CDSs')
-								remain = ''
+								pre_end = CDSs[p-1][1]
+								DNA_ans = seq[:pre_end-used_rem] + tempans[:used_rem] + seq[pre_end:start] + tempans[used_rem:] + seq[start+3-used_rem:] 
+								used_rem = 0
 						else:
 							print('Error: Hit variant pos but something wrong')
 					i+=3
-				else:  
+
+				# Or we hit on stop codon 
+				else: 
 					if(i+3 == CDSs[-1][1]):
 						return ans, DNA_ans
 					else:
@@ -216,5 +230,5 @@ def translater(seq = 'ATGACGGCGTGA', CDSs=None, AAmark = None):
 				break
 
 
-
-print(translater(AAmark = 'p.Thr2Ala'))
+print(translater(testseq, testcdss))
+print(translater(testseq, testcdss, AAmark = 'p.Thr14Ala'))

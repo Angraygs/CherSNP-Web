@@ -2,7 +2,7 @@
 Jack Yu - Final Project Proposal
 
 	Introduction: 
-		With the fast growth in DNA sequencing techniques, SNP (Single-nucleotide polymorphism) variants are more and more studied. However, sometimes, sequence of the variants may not be available directly. Variant might be simply annotated with allele change, like c.924G>A, or/and residue change, like p.Leu1517Phe, instead of having the whole sequence, which does make sense since SNP variants should only have 1 bp different with canonical sequence. But some researcher may still need the sequences for different reasons.
+		With the fast growth in DNA sequencing techniques, SNP (Single-nucleotide polymorphism) variants are more and more studied. However, sometimes, sequence of the variants may not be available directly. Variant might be simply annotated with allele change in HGVS format, like c.924G>A, or/and residue change, like p.Leu1517Phe, instead of having the whole sequence, which does make sense since SNP variants should only have 1 bp different with canonical sequence. But some researcher may still need the sequences for different reasons.
 
 		My final project would be aiming to create a HTML page which could output both the RNA sequence and amino acid sequence of SNP variant in FASTA format based on user's input transcript level canonical sequence (mRNA for example) and allele change / residue change annotation. If the canonical transcript does have introns inside, user would need to provided the cutting sequence in snRNPs.
 
