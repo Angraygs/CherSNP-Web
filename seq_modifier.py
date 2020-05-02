@@ -156,7 +156,7 @@ def R2DNA(seq):
 def translater(seq, CDSs=None, AAmark = None):
 	# Just covert it to DNA first
 	seq = R2DNA(seq)
-
+	used_rem = 0
 	# Preset some variables 
 	ans = []
 	DNA_ans = ''
@@ -221,6 +221,7 @@ def translater(seq, CDSs=None, AAmark = None):
 								used_rem = 0
 						else:
 							print('Error: Hit variant pos but something wrong')
+							return 'Error: Hit variant pos but something wrong', 'Error: Hit variant pos but something wrong'
 					i+=3
 
 				# Or we hit on stop codon 
@@ -230,6 +231,7 @@ def translater(seq, CDSs=None, AAmark = None):
 						return ans, DNA_ans
 					else:
 						print('Error: Hit stop codon before use all seqs')
+						return 'Error: Hit stop codon before use all seqs', 'Error: Hit stop codon before use all seqs'
 
 			# If some nucleotides are still left pass them to next cds
 			else:

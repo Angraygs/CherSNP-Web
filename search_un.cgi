@@ -9,25 +9,35 @@ env = jinja2.Environment(loader=templateLoader)
 template = env.get_template('temp.html')
 
 form = cgi.FieldStorage()
-
 mark = form.getvalue('mark')
-cds = form.getvalue('cds')
 seq = form.getvalue('seq')
 out = form.getvalue('out')
 inf = form.getvalue('inf')
+try:
+	cds = form.getvalue('cds')
+except:
+	cds = None
+
 
 # seq = 'ATGACGACGACGACGACGACGACGACGACGACGACGACGACGGGGGGGGGGTTTTAG'
-# cds = '1..41,51..57'
 # mark = 'p.Thr14Ala'
+
 
 temp = seq.split()
 rseq = ''
+header = ''
 for ele in temp:
 	if re.search(r'>', ele): 
 		header = ele + ': ' + mark + ', ' + out
 	else:
 		rseq += str(ele)
-cdss = seq_modifier.cds_reader(cds)
+
+if cds is None:
+	cdss = [[1, len(rseq)]]
+else:
+	cdss = seq_modifier.cds_reader(cds)
+
+
 
 if inf == 'AA' and out == 'AA':
 	if mark.split('.')[0] == 'p':
