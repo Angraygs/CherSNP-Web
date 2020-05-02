@@ -82,8 +82,14 @@ AA_simp = {
 	'Val':'V',
 }
 
-testseq = 'ATGACGACGACGACGACGACGACGACGACGACGACGACGACGGGGGGGGGGTTTTAG'
-testcdss = [[1,41],[51,57]]
+def cds_reader(cdss):
+	ans = []
+	regions = cdss.split(',')
+	for ele in regions:
+		if len(ele) > 0:
+			nods = ele.split('..')
+			ans.append([int(nods[0]), int(nods[1])])
+	return ans
 
 # Extract information from AA mark
 # Original AA, position, Changed AA
@@ -220,6 +226,7 @@ def translater(seq, CDSs=None, AAmark = None):
 				# Or we hit on stop codon 
 				else: 
 					if(i+3 == CDSs[-1][1]):
+						ans = ''.join(ans)
 						return ans, DNA_ans
 					else:
 						print('Error: Hit stop codon before use all seqs')
@@ -228,7 +235,3 @@ def translater(seq, CDSs=None, AAmark = None):
 			else:
 				remain = seq[i:end]
 				break
-
-
-print(translater(testseq, testcdss))
-print(translater(testseq, testcdss, AAmark = 'p.Thr14Ala'))

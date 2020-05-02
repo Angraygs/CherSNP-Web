@@ -3,18 +3,56 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Unit 06 Search Page</title>
+		<link rel="stylesheet" type="text/css" href="css/format.css" />
 		<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
+		
 	</head>
 
 	<body id="home">
-		<h1>Unit 06 Search Page, Jack Yu(gyu17)</h1>
+		<div class="container">  
+			<form id="search" method="post"  action="./search_un.cgi">
+			<h1>SNP Variant Sequence Generator</h1>
+			<h3>Jack Yu's final project</h3>
+			<fieldset>
+				<h2>SNP mark in HGVS format (c. r. p. are supported)</h2>
+				<input name="mark" id='mark' placeholder="p.Thr14Ala" type="text"><br>
+			</fieldset>
 
-		<form name="search" id="search" method="post" action="./search_un.cgi">
-			<input name="term" type="search" placeholder="Enter a search term"/>
-			<input name="submit" type="submit">
-		</form>
+			<fieldset>
+				<label for="inf">Choose input type:</label>
+				<select name="inf" id="inf">
+					<option value="DNA">DNA</option>
+					<option value="RNA">RNA</option>
+					<option value="AA">Protein</option>
+				</select>
+			</fieldset>
 
+			<fieldset>
+				<h2>CDS regions</h2>
+				<input name="cds" id='cds' placeholder="1..41,51..57" type="text"><br>
+			</fieldset>
+			
+			<fieldset>
+				<h2>Input source sequence here</h2>
+				<textarea name="seq" id='seq' placeholder=">test&#10;ATGACGACGACGACGACGACGACGACGACGACGACGACGACGGGGGGGGGGTTTTAG"></textarea>
+			</fieldset>
+
+			<fieldset>
+				<label for="out">Choose output type:</label>
+				<select name="out" id="out">
+					<option value="DNA">DNA</option>
+					<option value="RNA">RNA</option>
+					<option value="AA">Protein</option>
+				</select>
+			</fieldset>
+
+			<fieldset>
+				<button name="submit" type="submit" id="search-submit" >Submit</button>
+			</fieldset>
+
+		  </form>
+		</div>
 	</body>
 </html>
