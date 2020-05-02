@@ -43,7 +43,7 @@ Jack Yu - Final Project Proposal
 
 		Basically, two types of situation would be faced:
 			1. Translation required: 
-				This would be little bit complicated espeically considering the codon of AA influenced by SNP could be in 2 seperate CDS. One of the relatively comprehensive test I came out with is using DNA seq + annotation being p.Thr14Ala and set output sequence as RNA.
+				This would be little bit complicated espeically considering the codon of AA influenced by SNP could be in 2 seperate CDS. One of the relatively comprehensive test I came out with is using DNA seq + annotation being p.Thr14Ala and set output sequence as RNA. CDS is 1..41,51..57
 				In this case, to make changes on reference sequence, translation process would be tested as the same time with testing ability to mark allele changes on reference DNA seq when AA change influences 2 CDSs. Then, to make output RNA type, the DNA RNA conversion ability is also tested.
 			2. Translation not required: 
 				This type is realatively easy and could be tested with either DNA seq + annotation being r.4A>U + output being back into DNA
@@ -55,6 +55,3 @@ Jack Yu - Final Project Proposal
 	URL: http://bfx3.aap.jhu.edu/gyu17/final/search.html
 	Source codes can be found on server: /var/www/html/gyu17/final or on blackboard as I submitted or on GitHub
 
-
-# cds = '1..41,51..57'
-# mark = 'p.Thr14Ala'
