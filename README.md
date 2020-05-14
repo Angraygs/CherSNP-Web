@@ -1,5 +1,3 @@
-# 410.712
-Jack Yu - Final Project Proposal
 
 	Introduction: 
 		With the fast growth in DNA sequencing techniques, SNP (Single-nucleotide polymorphism) variants are more and more studied. However, sometimes, sequence of the variants may not be available directly. Variant might be simply annotated with allele change in HGVS format, like c.924G>A, or/and residue change, like p.Leu1517Phe, instead of having the whole sequence, which does make sense since SNP variants should only have 1 bp different with canonical sequence. But some researcher may still need the sequences for different reasons.
